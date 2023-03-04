@@ -6,9 +6,13 @@
       <Block :inline="true" :horizontalCenter="true" :fadeIn="true">
         <ColorPicker :initialColor="device.data.color.hex" v-model="color" />
       </Block>
-      <Block :verticalCenter="true" height="151px">
+      <Block :verticalCenter="true" height="64px">
         <Paragraph type="smaller" v-html="$t('colorChanger.brightness')" />
         <InputRange :defaultValue="device.data.brightness" v-model="brightness" />
+      </Block>
+      <Block :verticalCenter="true" height="64px">
+        <Paragraph type="smaller" v-html="$t('colorChanger.whiteLevel')" />
+        <InputRange :defaultValue="device.data.warmWhite" v-model="white" :max="255" />
       </Block>
       <Block>
         <Paragraph type="smaller" v-html="$t('colorChanger.presets')" />
@@ -83,6 +87,7 @@ import InputRange from 'renderer/components/InputRange.vue';
 export default class ColorChanger extends Vue {
   color: Color | null = null;
   brightness: number | null = null;
+  white: number | null = null;
   deleting = false;
   shouldShake = false;
   device: Device | null = null;
@@ -115,26 +120,39 @@ export default class ColorChanger extends Vue {
   onColorChanged(color: Color) {
     if (this.device) {
       const brightness = (this.brightness) ? this.brightness : this.device.data.brightness;
+      const whiteLevel = this.white ?? this.device.data.warmWhite;
 
-      this.changeColor(color, brightness);
+      this.changeColor(color, brightness, whiteLevel);
     }
   }
 
   @Watch('brightness')
   onBrightnessChanged(brightness: number) {
     if (this.device) {
-      const color = (this.color) ? this.color : this.device.data.color;
+      const color = this.color ?? this.device.data.color;
+      const whiteLevel = this.white ?? this.device.data.warmWhite;
 
-      this.changeColor(color, brightness);
+      this.changeColor(color, brightness, whiteLevel);
     }
   }
 
-  async changeColor(color: Color, brightness: number) {
+  @Watch('white')
+  onWhiteLevelChanged(whiteLevel: number) {
+    if (this.device) {
+        const color = this.color ?? this.device.data.color;
+        const brightness = this.brightness ?? 0;
+
+        this.changeColor(color, brightness, whiteLevel);
+    }
+  }
+
+  async changeColor(color: Color, brightness: number, white: number) {
     if (this.device) {
       await DevicesModule.changeDeviceColor({
         address: this.device.address,
         color,
         brightness,
+        white,
       });
     }
   }
@@ -168,7 +186,7 @@ export default class ColorChanger extends Vue {
   }
 
   async selectPreset(preset: Preset) {
-    await this.changeColor(preset.color, preset.brightness);
+    await this.changeColor(preset.color, preset.brightness, 0);
   }
 
   async removePreset(index: number) {

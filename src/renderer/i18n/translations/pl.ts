@@ -22,6 +22,7 @@ const locale: TranslationInterface = {
     title: 'Zmiana koloru dla {device}',
     brightness: 'Jasność:',
     presets: 'Presety:',
+    whiteLevel: '',
   },
   keybindChanger: {
     title: 'Zmiana skrótu klawiszowego dla {device}',

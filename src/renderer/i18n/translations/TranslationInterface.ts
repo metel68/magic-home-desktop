@@ -21,6 +21,7 @@ export default interface Translation extends LocaleMessageObject {
     title: string,
     brightness: string,
     presets: string,
+    whiteLevel: string;
   },
   keybindChanger: {
     title: string,

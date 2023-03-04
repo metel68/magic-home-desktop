@@ -44,7 +44,7 @@ class Devices extends VuexModule implements DevicesState {
   }
 
   @Mutation
-  SET_DEVICE_COLOR({ address, color, brightness }: any) {
+  SET_DEVICE_COLOR({ address, color, brightness, white }: any) {
     this.list.forEach((device, index) => {
       if (device.address === address) {
         this.list[index].data.brightness = brightness
@@ -53,6 +53,7 @@ class Devices extends VuexModule implements DevicesState {
         this.list[index].data.color.g = color.g
         this.list[index].data.color.b = color.b
         this.list[index].data.color.hex = rgbToHex(color.r, color.g, color.b)
+        this.list[index].data.warmWhite = white;
       }
     })
   }
@@ -110,13 +111,14 @@ class Devices extends VuexModule implements DevicesState {
   }
 
   @Action({ commit: 'SET_DEVICE_COLOR' })
-  async changeDeviceColor({ address, color, brightness }: any) {
-    await window.api.ipcRequest('change-device-color', { address, color, brightness });
+  async changeDeviceColor({ address, color, brightness, white }: any) {
+    await window.api.ipcRequest('change-device-color', { address, color, brightness, white });
 
     return {
       address,
       color,
       brightness,
+      white,
     }
   }
 

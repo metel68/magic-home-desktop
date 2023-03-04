@@ -7,23 +7,32 @@ import {
   Discovery,
   Control,
   Device as MagicDevice,
+  ControlOptions,
 } from 'magic-home';
 
 import { rgbToHex } from 'shared/utils';
 
+const ack = {
+  power: true,
+  color: false,
+  pattern: false,
+  custom_pattern: false,
+};
+
 export default class MagicHomeController implements ControllerInteface {
   public type: string = 'magic-home';
   private controller!: Control;
+  private options: ControlOptions = { ack };
 
   private createController(address: string) {
     if (this.controller) {
       if (this.controller._address !== address) { // eslint-disable-line no-underscore-dangle
-        this.controller = new Control(address);
+        this.controller = new Control(address, this.options);
       } else {
         this.controller._commandQueue = []; // eslint-disable-line no-underscore-dangle
       }
     } else {
-      this.controller = new Control(address);
+      this.controller = new Control(address, this.options);
     }
 
     return this.controller;
@@ -53,6 +62,7 @@ export default class MagicHomeController implements ControllerInteface {
               b: 0,
               hex: '#000000',
             },
+            warmWhite: 0,
           },
         });
       });
@@ -75,13 +85,14 @@ export default class MagicHomeController implements ControllerInteface {
 
       return {
         on: data.on,
-        brightness: 100,
+        brightness: Math.max(data.color.red, data.color.green, data.color.blue) / 2.55,
         color: {
           r: data.color.red,
           g: data.color.green,
           b: data.color.blue,
           hex: rgbToHex(data.color.red, data.color.green, data.color.blue),
         },
+        warmWhite: data.warm_white,
       };
     } catch (e) {
       if (process.env.NODE_ENV !== 'production') {
@@ -98,6 +109,7 @@ export default class MagicHomeController implements ControllerInteface {
         b: 0,
         hex: '#000000',
       },
+      warmWhite: 0,
     };
   }
 
@@ -121,11 +133,17 @@ export default class MagicHomeController implements ControllerInteface {
     return false;
   }
 
-  public async changeDeviceColor(address: string, color: Color, brightness: number): Promise<boolean> {
+  public async changeDeviceColor(address: string, color: Color, brightness: number, white: number): Promise<boolean> {
     const device = this.createController(address);
 
     try {
-      await device.setColorWithBrightness(color.r, color.g, color.b, brightness);
+      const b = brightness / 100
+      await device.setColorAndWarmWhite(
+        Math.round(color.r * b),
+        Math.round(color.g * b),
+        Math.round(color.b * b),
+        white,
+      );
 
       return true;
     } catch (e) {

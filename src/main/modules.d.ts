@@ -31,13 +31,13 @@ declare module 'magic-home' {
   }
 
   interface ControlOptions {
-    wait_for_reply: boolean;
-    log_all_received: boolean;
-    apply_masks: boolean;
-    cold_white_support: boolean;
-    connect_timeout: number;
-    command_timeout: number;
-    ack: Ack;
+    wait_for_reply?: boolean;
+    log_all_received?: boolean;
+    apply_masks?: boolean;
+    cold_white_support?: boolean;
+    connect_timeout?: number;
+    command_timeout?: number;
+    ack?: Ack;
   }
 
   interface Color {
@@ -71,6 +71,7 @@ declare module 'magic-home' {
 
     setPower(on: boolean);
     queryState(): QueryResponse;
+    setColorAndWarmWhite(red: number, green: number, blue: number, white: number): boolean;
     setColorWithBrightness(red: number, green: number, blue: number, brightness: number): boolean;
   }
 

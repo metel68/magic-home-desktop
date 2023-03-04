@@ -4,6 +4,7 @@ export interface DeviceData {
   on: boolean;
   brightness: number;
   color: Color;
+  warmWhite: number;
 }
 
 export interface Device {
