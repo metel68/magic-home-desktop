@@ -11,7 +11,7 @@
           </Block>
 
           <template v-slot:right>
-            <InputToggle :defaultValue="!darkMode" @input="(value) => changeSetting('darkMode', value)" />
+            <InputToggle :value="!darkMode" @input="(value) => changeSetting('darkMode', value)" />
           </template>
         </ListItem>
         <ListItem>
@@ -21,7 +21,7 @@
           </Block>
 
           <template v-slot:right>
-            <InputToggle :defaultValue="openOnStartup" @input="(value) => changeSetting('openOnStartup', value)" />
+            <InputToggle :value="openOnStartup" @input="(value) => changeSetting('openOnStartup', value)" />
           </template>
         </ListItem>
         <ListItem>

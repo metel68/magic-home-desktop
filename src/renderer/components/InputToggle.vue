@@ -1,6 +1,6 @@
 <template>
   <div class="checkbox-container">
-    <input type="checkbox" class="checkbox" v-model="value">
+    <input type="checkbox" class="checkbox" v-model="internalValue">
     <div class="checkbox-visual"></div>
   </div>
 </template>
@@ -15,12 +15,17 @@ import {
 
 @Component
 export default class InputToggle extends Vue {
-  @Prop({ type: Boolean, default: false }) readonly defaultValue!: boolean;
+  @Prop({ type: Boolean, default: false }) readonly value!: boolean;
 
-  value: boolean = this.defaultValue;
+  internalValue: boolean = this.value;
 
   @Watch('value')
-  onValueChanged(value: boolean) {
+  private onValuePropChanged(value: boolean) {
+    this.internalValue = value;
+  }
+
+  @Watch('internalValue')
+  onChange(value: boolean) {
     this.$emit('input', value);
   }
 }
