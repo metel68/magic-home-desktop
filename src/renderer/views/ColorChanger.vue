@@ -165,7 +165,9 @@ export default class ColorChanger extends Vue {
   }
 
   async selectPreset(preset: Preset) {
-    await this.changeColor(preset.color, 0);
+    const whiteLevel = this.white ?? this.device?.data.warmWhite ?? 0;
+
+    await this.changeColor(preset.color, whiteLevel);
   }
 
   async removePreset(index: number) {
