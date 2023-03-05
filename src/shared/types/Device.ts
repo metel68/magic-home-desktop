@@ -2,7 +2,6 @@ import { Color } from 'shared/types/Color';
 
 export interface DeviceData {
   on: boolean;
-  brightness: number;
   color: Color;
   warmWhite: number;
 }

@@ -7,5 +7,5 @@ export default interface ControllerInterface {
   discover(): Promise<Array<Device>>;
   queryData(address: string): Promise<DeviceData>;
   toggleState(address: string): Promise<boolean>;
-  changeDeviceColor(address: string, color: Color, brightness: number, white: number): Promise<boolean>;
+  changeDeviceColor(address: string, color: Color, white: number): Promise<boolean>;
 }

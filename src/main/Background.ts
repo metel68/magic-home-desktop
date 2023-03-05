@@ -92,7 +92,7 @@ class Background {
 
   private async createWindow() {
     this.window = new BrowserWindow({
-      height: 583,
+      height: 640,
       width: 420,
       frame: false,
       resizable: false,

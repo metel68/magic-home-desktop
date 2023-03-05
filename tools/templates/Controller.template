@@ -11,13 +11,13 @@ export default class __class_name__ implements ControllerInteface {
   public async queryData(address: string): Promise<DeviceData> {
     return {
       on: false,
-      brightness: 100,
       color: {
         r: 0,
         g: 0,
         b: 0,
         hex: '#000000',
       },
+      warmWhite: 0,
     };
   }
 
@@ -25,7 +25,7 @@ export default class __class_name__ implements ControllerInteface {
     return false;
   }
 
-  public async changeDeviceColor(address: string, color: Color, brightness: number): Promise<boolean> {
+  public async changeDeviceColor(address: string, color: Color, white: number): Promise<boolean> {
     return false;
   }
 }

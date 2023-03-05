@@ -19,7 +19,6 @@ export default interface Translation extends LocaleMessageObject {
   },
   colorChanger: {
     title: string,
-    brightness: string,
     presets: string,
     whiteLevel: string;
   },

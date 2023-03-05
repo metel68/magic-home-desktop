@@ -19,7 +19,6 @@ export default class ChangeDeviceColorChannel implements IpcChannelInterface {
 
     const address = request.params.address as string;
     const color = request.params.color as Color;
-    const brightness = request.params.brightness as number;
     const white = request.params.white as number || 0;
 
     let state = false;
@@ -27,7 +26,7 @@ export default class ChangeDeviceColorChannel implements IpcChannelInterface {
     const controller = getControllerByDevice(address);
 
     if (controller) {
-      state = await controller.changeDeviceColor(address, color, brightness, white);
+      state = await controller.changeDeviceColor(address, color, white);
     }
 
     event.sender.send(request.responseChannel, state);

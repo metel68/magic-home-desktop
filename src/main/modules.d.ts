@@ -72,7 +72,6 @@ declare module 'magic-home' {
     setPower(on: boolean);
     queryState(): QueryResponse;
     setColorAndWarmWhite(red: number, green: number, blue: number, white: number): boolean;
-    setColorWithBrightness(red: number, green: number, blue: number, brightness: number): boolean;
   }
 
   class Discovery {

@@ -105,7 +105,7 @@ export default class App extends Vue {
 
   .top-container {
     position: relative;
-    height: 563px;
+    height: 640px;
     width: 400px;
 
     &:before,
@@ -151,7 +151,7 @@ export default class App extends Vue {
   }
 
   main {
-    min-height: 563px;
+    min-height: 640px;
     display: grid;
     grid-template: 'main';
     flex: 1;

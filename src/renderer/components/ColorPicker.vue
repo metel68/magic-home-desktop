@@ -34,12 +34,7 @@ export default class ColorPicker extends Vue {
 
   createColorWheel() {
     this.colorWheel = iro.ColorPicker('#color-picker', {
-      layout: [
-        {
-          component: iro.ui.Wheel,
-        },
-      ],
-      width: this.width,
+      layoutDirection: "horizontal",
       color: this.initialColor,
     });
 

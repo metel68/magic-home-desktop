@@ -55,7 +55,6 @@ export default class MagicHomeController implements ControllerInteface {
           type: this.type,
           data: {
             on: false,
-            brightness: 100,
             color: {
               r: 0,
               g: 0,
@@ -85,7 +84,6 @@ export default class MagicHomeController implements ControllerInteface {
 
       return {
         on: data.on,
-        brightness: Math.max(data.color.red, data.color.green, data.color.blue) / 2.55,
         color: {
           r: data.color.red,
           g: data.color.green,
@@ -102,7 +100,6 @@ export default class MagicHomeController implements ControllerInteface {
 
     return {
       on: false,
-      brightness: 100,
       color: {
         r: 0,
         g: 0,
@@ -133,15 +130,14 @@ export default class MagicHomeController implements ControllerInteface {
     return false;
   }
 
-  public async changeDeviceColor(address: string, color: Color, brightness: number, white: number): Promise<boolean> {
+  public async changeDeviceColor(address: string, color: Color, white: number): Promise<boolean> {
     const device = this.createController(address);
 
     try {
-      const b = brightness / 100
       await device.setColorAndWarmWhite(
-        Math.round(color.r * b),
-        Math.round(color.g * b),
-        Math.round(color.b * b),
+        color.r,
+        color.g,
+        color.b,
         white,
       );
 

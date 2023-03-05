@@ -41,8 +41,8 @@ class Presets extends VuexModule implements PresetsState {
   }
 
   @Action
-  async addPreset({ color, brightness }: any) {
-    const preset = await window.api.ipcRequest('add-preset', { color, brightness }) as Preset;
+  async addPreset({ color }: any) {
+    const preset = await window.api.ipcRequest('add-preset', { color }) as Preset;
 
     if (preset) {
       this.context.commit('ADD_PRESET', preset);

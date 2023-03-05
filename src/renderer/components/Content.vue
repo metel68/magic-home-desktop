@@ -22,7 +22,7 @@ export default class Content extends Vue {
 
 <style lang="scss" scoped>
   .content {
-    height: 433px;
+    height: 490px;
     overflow-y: hidden;
     padding: 20px;
 

@@ -20,7 +20,6 @@ const locale: TranslationInterface = {
   },
   colorChanger: {
     title: 'Zmiana koloru dla {device}',
-    brightness: 'Jasność:',
     presets: 'Presety:',
     whiteLevel: '',
   },
