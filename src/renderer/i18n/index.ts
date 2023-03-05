@@ -3,6 +3,7 @@ import VueI18n from 'vue-i18n';
 
 import English from 'renderer/i18n/translations/en';
 import Polish from 'renderer/i18n/translations/pl';
+import Russian from 'renderer/i18n/translations/ru';
 
 Vue.use(VueI18n);
 
@@ -12,5 +13,6 @@ export default new VueI18n({
   messages: {
     en: English,
     pl: Polish,
+    ru: Russian,
   },
 });
