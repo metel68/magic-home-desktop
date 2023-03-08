@@ -14,6 +14,15 @@
         <Paragraph type="smaller" v-html="$t('colorChanger.presets')" />
         <Block :inline="true">
           <Button
+            v-if="lastColor && (lastColor.hex !== color.hex)"
+            :boxy="true"
+            :color="lastColor.hex"
+            :spacerRight="true"
+            v-on:click="selectPreset({color: lastColor})"
+          >
+            <Icon icon="undo" />
+          </Button>
+          <Button
             v-for="(preset, index) in presets"
             v-bind:key="index"
             :boxy="true"
@@ -82,6 +91,7 @@ import InputRange from 'renderer/components/InputRange.vue';
 })
 export default class ColorChanger extends Vue {
   color: Color | null = null;
+  lastColor: Color | null = null;
   white: number | null = null;
   deleting = false;
   shouldShake = false;
@@ -109,11 +119,15 @@ export default class ColorChanger extends Vue {
     }
 
     this.device = DevicesModule.list[deviceIndex];
+    this.color = this.device.data.color;
+    this.white = this.device.data.warmWhite;
   }
 
   @Watch('color')
   onColorChanged(color: Color) {
     if (this.device) {
+      this.lastColor = Object.assign({}, this.device.data.color);
+
       const whiteLevel = this.white ?? this.device.data.warmWhite;
 
       this.changeColor(color, whiteLevel);
@@ -169,7 +183,8 @@ export default class ColorChanger extends Vue {
     const whiteLevel = this.white ?? this.device?.data.warmWhite ?? 0;
 
     await this.changeColor(preset.color, whiteLevel);
-  }
+    this.color = preset.color;
+   }
 
   async removePreset(index: number) {
     await PresetsModule.removePreset(index);
