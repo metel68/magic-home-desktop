@@ -32,6 +32,7 @@
             <Icon :classes="shakeClass" icon="plus" />
           </Button>
           <Button
+            v-if="presets.length > 0"
             :boxy="true"
             color="transparent"
             v-on:click="toggleDelete"
@@ -172,6 +173,10 @@ export default class ColorChanger extends Vue {
 
   async removePreset(index: number) {
     await PresetsModule.removePreset(index);
+
+    if (this.presets.length === 0) {
+      this.deleting = false;
+    }
   }
 
   toggleDelete() {
