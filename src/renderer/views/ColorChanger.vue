@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
+import { Vue, Component } from 'vue-property-decorator';
 
 import { DevicesModule } from 'renderer/store/modules/Devices';
 import { PresetsModule } from 'renderer/store/modules/Presets';
@@ -74,6 +74,7 @@ import Icon from 'renderer/components/Icon.vue';
 import Paragraph from 'renderer/components/Paragraph.vue';
 import ColorPicker from 'renderer/components/ColorPicker.vue';
 import InputRange from 'renderer/components/InputRange.vue';
+import { getBrightness } from "renderer/utils";
 
 @Component({
   components: {
@@ -90,12 +91,36 @@ import InputRange from 'renderer/components/InputRange.vue';
   },
 })
 export default class ColorChanger extends Vue {
-  color: Color | null = null;
   lastColor: Color | null = null;
-  white: number | null = null;
   deleting = false;
   shouldShake = false;
-  device: Device | null = null;
+  device: Device | null = null
+
+  get color() {
+    if (!this.device) {
+       return { r: 0, g: 0, b: 0, hex: '#000000' };
+    }
+
+    return this.device.data.color;
+  }
+
+  set color(color: Color) {
+    if (this.device) {
+      if (getBrightness(this.device.data.color) > 5) {
+        this.lastColor = Object.assign({}, this.device.data.color);
+      }
+
+      this.changeColor(color, this.white);
+    }
+  }
+
+  get white() {
+    return this.device ? this.device.data.warmWhite : 0;
+  }
+
+  set white(whiteLevel: number) {
+    this.changeColor(this.color, whiteLevel);
+  }
 
   get presets() {
     return PresetsModule.list;
@@ -119,28 +144,6 @@ export default class ColorChanger extends Vue {
     }
 
     this.device = DevicesModule.list[deviceIndex];
-    this.color = this.device.data.color;
-    this.white = this.device.data.warmWhite;
-  }
-
-  @Watch('color')
-  onColorChanged(color: Color) {
-    if (this.device) {
-      this.lastColor = Object.assign({}, this.device.data.color);
-
-      const whiteLevel = this.white ?? this.device.data.warmWhite;
-
-      this.changeColor(color, whiteLevel);
-    }
-  }
-
-  @Watch('white')
-  onWhiteLevelChanged(whiteLevel: number) {
-    if (this.device) {
-        const color = this.color ?? this.device.data.color;
-
-        this.changeColor(color, whiteLevel);
-    }
   }
 
   async changeColor(color: Color, white: number) {
@@ -155,7 +158,7 @@ export default class ColorChanger extends Vue {
 
   async addPreset() {
     if (this.device) {
-      const color = Object.assign({}, (this.color) ? this.color : this.device.data.color)
+      const color = Object.assign({}, this.color)
 
       this.shouldShake = !await PresetsModule.addPreset({
         color,
@@ -180,10 +183,7 @@ export default class ColorChanger extends Vue {
   }
 
   async selectPreset(preset: Preset) {
-    const whiteLevel = this.white ?? this.device?.data.warmWhite ?? 0;
-
-    await this.changeColor(preset.color, whiteLevel);
-    this.color = preset.color;
+    await this.changeColor(preset.color, this.white);
    }
 
   async removePreset(index: number) {
